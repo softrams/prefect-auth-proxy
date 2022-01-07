@@ -1,6 +1,15 @@
 # Proxy Authorization Service for Prefect UI and Prefect CLI
 
-Prefect currently do not offer Authentication/Authorization options for API when run on-premises. This functionality is only available with Cloud subscription. So this Proxy service is a workaround for Prefect UI and CLI to enable authentication/authorization for API. All the requests to Prefect API will be proxied through this service.
+[Prefect](https://prefect.io) is a great platform for building data flows/pipelines. It supports hybrid execution with execution engines running on-premises with
+all command control and monitoring capabilities via the Prefect UI hosted on the cloud. This means metadata about flows, logs and metrics
+will be stored in the cloud and can be accessed via the UI. When possible, we do recommend using the Prefect Cloud to manage your data flows.
+
+However some organizations may prefer or required to run their flows on-premises and have the UI run on-premises as well. This is where the
+Proxy Authorization Service comes in. Prefect currently do not bundle Authentication/Authorization options for API in the open source eco-system.
+This functionality is only available with Prefect Cloud, along with many other features.
+
+If your deployments have any constraints or security regulations to use Prefect Cloud, this Proxy service could be used as a workaround for
+Prefect UI and CLI to enable authentication/authorization for API. All the requests to Prefect API will be proxied through this service.
 
 ## Setup
 
