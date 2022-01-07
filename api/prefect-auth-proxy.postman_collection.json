@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "16b4b633-a4b3-4236-8688-8dbad185aa5c",
+		"name": "Prefect UI Proxy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Query : Multiple Query Operations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-prefect-user-id",
+						"value": "TestKey",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"operationName\": \"FlowRuns\",\n        \"variables\": {\n            \"projectId\": null,\n            \"heartbeat\": \"2021-12-29T14:00:00Z\"\n        },\n        \"query\": \"query FlowRuns($projectId: uuid, $heartbeat: timestamptz) {\\n  Success: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Success\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Running: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Running\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Pending: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Pending\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Failed: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Failed\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  ClientFailed: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"ClientFailed\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Submitted: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Submitted\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Queued: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Queued\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Resume: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Resume\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Retrying: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Retrying\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Looped: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Looped\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Cached: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Cached\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Mapped: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Mapped\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  TimedOut: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"TimedOut\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  TriggerFailed: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"TriggerFailed\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Skipped: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Skipped\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Finished: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Finished\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Cancelled: flow_run_aggregate(\\n    where: {flow: {project_id: {_eq: $projectId}}, scheduled_start_time: {_gte: $heartbeat}, state: {_eq: \\\"Cancelled\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"InProgressFlowRuns\",\n        \"variables\": {\n            \"projectId\": null\n        },\n        \"query\": \"query InProgressFlowRuns($projectId: uuid) {\\n  flow_run(\\n    where: {flow: {project_id: {_eq: $projectId}}, state: {_in: [\\\"Running\\\", \\\"Submitted\\\", \\\"Cancelling\\\"]}}\\n    order_by: {start_time: desc}\\n  ) {\\n    id\\n    name\\n    start_time\\n    state\\n    state_timestamp\\n    flow {\\n      id\\n      name\\n      flow_group_id\\n      __typename\\n    }\\n    updated\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"Agents\",\n        \"variables\": {},\n        \"query\": \"query Agents {\\n  agent {\\n    id\\n    agent_config_id\\n    core_version\\n    created\\n    name\\n    labels\\n    last_queried\\n    type\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"Projects\",\n        \"variables\": {},\n        \"query\": \"query Projects {\\n  project {\\n    id\\n    name\\n    tenant_id\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"Flows\",\n        \"variables\": {},\n        \"query\": \"query Flows {\\n  flow(where: {archived: {_eq: false}}) {\\n    id\\n    flow_group_id\\n    name\\n    project_id\\n    is_schedule_active\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"UpcomingFlowRuns\",\n        \"variables\": {\n            \"projectId\": null\n        },\n        \"query\": \"query UpcomingFlowRuns($projectId: uuid) {\\n  flow_run(\\n    where: {flow: {project_id: {_eq: $projectId}}, state: {_eq: \\\"Scheduled\\\"}}\\n    order_by: [{scheduled_start_time: asc}, {flow: {name: asc}}]\\n  ) {\\n    id\\n    name\\n    state\\n    labels\\n    scheduled_start_time\\n    version\\n    flow {\\n      id\\n      name\\n      schedule\\n      environment\\n      is_schedule_active\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Flow Run",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-prefect-user-id",
+						"value": "TestKey001",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"operationName\": \"CreateFlowRun\",\n        \"variables\": {\n            \"id\": \"3e216621-8e22-4f7f-af69-284c644cba05\"\n        },\n        \"query\": \"mutation CreateFlowRun($context: JSON, $id: UUID!, $flowRunName: String, $parameters: JSON, $scheduledStartTime: DateTime, $runConfig: JSON, $labels: [String!]) {\\n  create_flow_run(\\n    input: {context: $context, flow_id: $id, flow_run_name: $flowRunName, parameters: $parameters, scheduled_start_time: $scheduledStartTime, run_config: $runConfig, labels: $labels}\\n  ) {\\n    id\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"Flow\",\n        \"variables\": {\n            \"id\": \"756e7c2a-12f6-4d91-8cdb-7543810a6d9b\"\n        },\n        \"query\": \"query Flow($id: uuid!) {\\n  flow_group_by_pk(id: $id) {\\n    id\\n    labels\\n    created\\n    description\\n    name\\n    default_parameters\\n    schedule\\n    flows {\\n      id\\n      archived\\n      core_version\\n      created\\n      description\\n      run_config\\n      environment\\n      flow_group_id\\n      is_schedule_active\\n      name\\n      parameters\\n      project {\\n        id\\n        name\\n        __typename\\n      }\\n      schedule\\n      storage\\n      updated\\n      version\\n      version_group_id\\n      __typename\\n    }\\n    settings\\n    updated\\n    __typename\\n  }\\n}\\n\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Flow Run (With Multiple Queries)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-prefect-user-id",
+						"value": "TestKey",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"operationName\": \"TableFlowRuns\",\n        \"variables\": {\n            \"limit\": 15,\n            \"name\": null,\n            \"offset\": 0,\n            \"state\": null,\n            \"orderBy\": {\n                \"scheduled_start_time\": \"desc\"\n            },\n            \"flow_group_id\": \"756e7c2a-12f6-4d91-8cdb-7543810a6d9b\"\n        },\n        \"query\": \"query TableFlowRuns($name: String, $limit: Int, $offset: Int, $orderBy: [flow_run_order_by!], $flow_group_id: uuid, $flow_id: uuid, $state: [String!]) {\\n  flow_run(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, name: {_ilike: $name}, state: {_in: $state, _neq: \\\"Scheduled\\\"}}\\n    order_by: $orderBy\\n    limit: $limit\\n    offset: $offset\\n  ) {\\n    id\\n    name\\n    end_time\\n    scheduled_start_time\\n    start_time\\n    state\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"CreateFlowRun\",\n        \"variables\": {\n            \"context\": {},\n            \"id\": \"3e216621-8e22-4f7f-af69-284c644cba05\",\n            \"flowRunName\": \"curly-dragonfly\",\n            \"parameters\": {\n                \"P_TEMP_TABLE_1\": \"tmp_1800_inbound_rawdata\",\n                \"P_TEMP_TABLE_2\": \"MDE_BENE_INTRFC_tmp_1800\",\n                \"P_inb_filename\": \"DPRF.NGD1800.D211214.T2232008\"\n            },\n            \"scheduledStartTime\": null,\n            \"runConfig\": {\n                \"env\": null,\n                \"type\": \"KubernetesRun\",\n                \"image\": \"molsonlabs/prefect-snowflake:0.0.1\",\n                \"labels\": [],\n                \"cpu_limit\": null,\n                \"__version__\": \"0.15.6\",\n                \"cpu_request\": null,\n                \"job_template\": null,\n                \"memory_limit\": null,\n                \"memory_request\": null,\n                \"image_pull_policy\": null,\n                \"job_template_path\": null,\n                \"image_pull_secrets\": null,\n                \"service_account_name\": null\n            },\n            \"labels\": null\n        },\n        \"query\": \"mutation CreateFlowRun($context: JSON, $id: UUID!, $flowRunName: String, $parameters: JSON, $scheduledStartTime: DateTime, $runConfig: JSON, $labels: [String!]) {\\n  create_flow_run(\\n    input: {context: $context, flow_id: $id, flow_run_name: $flowRunName, parameters: $parameters, scheduled_start_time: $scheduledStartTime, run_config: $runConfig, labels: $labels}\\n  ) {\\n    id\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"TableFlowRunsCount\",\n        \"variables\": {\n            \"name\": null,\n            \"state\": null,\n            \"flow_group_id\": \"756e7c2a-12f6-4d91-8cdb-7543810a6d9b\"\n        },\n        \"query\": \"query TableFlowRunsCount($flow_group_id: uuid, $flow_id: uuid, $name: String, $state: [String!]) {\\n  flow_run_aggregate(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, name: {_ilike: $name}, state: {_in: $state, _neq: \\\"Scheduled\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"FlowRuns\",\n        \"variables\": {\n            \"heartbeat\": \"2021-12-29T15:00:00Z\",\n            \"flow_group_id\": \"756e7c2a-12f6-4d91-8cdb-7543810a6d9b\"\n        },\n        \"query\": \"query FlowRuns($flow_group_id: uuid, $flow_id: uuid, $heartbeat: timestamptz) {\\n  Success: flow_run_aggregate(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, updated: {_gte: $heartbeat}, state: {_eq: \\\"Success\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Failed: flow_run_aggregate(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, updated: {_gte: $heartbeat}, state: {_eq: \\\"Failed\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Submitted: flow_run_aggregate(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, updated: {_gte: $heartbeat}, state: {_eq: \\\"Submitted\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Paused: flow_run_aggregate(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, updated: {_gte: $heartbeat}, state: {_eq: \\\"Paused\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Resume: flow_run_aggregate(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, updated: {_gte: $heartbeat}, state: {_eq: \\\"Resume\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Running: flow_run_aggregate(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, updated: {_gte: $heartbeat}, state: {_eq: \\\"Running\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n  Cancelled: flow_run_aggregate(\\n    where: {flow: {flow_group_id: {_eq: $flow_group_id}, id: {_eq: $flow_id}}, updated: {_gte: $heartbeat}, state: {_eq: \\\"Cancelled\\\"}}\\n  ) {\\n    aggregate {\\n      count\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"Agents\",\n        \"variables\": {},\n        \"query\": \"query Agents {\\n  agent {\\n    id\\n    agent_config_id\\n    core_version\\n    created\\n    name\\n    labels\\n    last_queried\\n    type\\n    __typename\\n  }\\n}\\n\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Flow Run",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-prefect-user-id",
+						"value": "TestKey",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"operationName\": \"Projects\",\n        \"variables\": {},\n        \"query\": \"query Projects {\\n  project {\\n    id\\n    name\\n    tenant_id\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"Flows\",\n        \"variables\": {},\n        \"query\": \"query Flows {\\n  flow(where: {archived: {_eq: false}}) {\\n    id\\n    flow_group_id\\n    name\\n    project_id\\n    is_schedule_active\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"Agents\",\n        \"variables\": {},\n        \"query\": \"query Agents {\\n  agent {\\n    id\\n    agent_config_id\\n    core_version\\n    created\\n    name\\n    labels\\n    last_queried\\n    type\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"FlowRun\",\n        \"variables\": {\n            \"id\": \"2b176b8f-0d89-4780-98e5-5123598cf7f9\"\n        },\n        \"query\": \"query FlowRun($id: uuid!) {\\n  flow_run_by_pk(id: $id) {\\n    id\\n    name\\n    version\\n    labels\\n    auto_scheduled\\n    auto_scheduled\\n    context\\n    end_time\\n    flow_id\\n    name\\n    parameters\\n    scheduled_start_time\\n    start_time\\n    state\\n    state_message\\n    state_timestamp\\n    parameters\\n    context\\n    agent_id\\n    states {\\n      id\\n      state\\n      timestamp\\n      start_time\\n      __typename\\n    }\\n    flow {\\n      id\\n      name\\n      version\\n      version_group_id\\n      core_version\\n      parameters\\n      archived\\n      flow_group_id\\n      project {\\n        id\\n        name\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"\n    },\n    {\n        \"operationName\": \"CancelFlowRun\",\n        \"variables\": {\n            \"flowRunId\": \"2b176b8f-0d89-4780-98e5-5123598cf7f9\"\n        },\n        \"query\": \"mutation CancelFlowRun($flowRunId: UUID!) {\\n  cancel_flow_run(input: {flow_run_id: $flowRunId}) {\\n    state\\n    __typename\\n  }\\n}\\n\"\n    }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/graphql",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Healthcheck",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/healthcheck",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Cache",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/cache/reset",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cache",
+						"reset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Key from Cache",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/cache/:apiKey",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"cache",
+						":apiKey"
+					],
+					"variable": [
+						{
+							"key": "apiKey",
+							"value": "TestKey001"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
