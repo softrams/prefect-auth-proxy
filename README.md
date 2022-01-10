@@ -1,4 +1,5 @@
-# Proxy Authorization Service for Prefect UI and Prefect CLI
+# Proxy Authorization Service for Prefect UI and Prefect CLI 
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/softrams/prefect-auth-proxy)
 
 [Prefect](https://prefect.io) is a great platform for building data flows/pipelines. It supports hybrid execution with execution engines running on-premises with
 all command control and monitoring capabilities via the Prefect UI hosted on the cloud. This means metadata about flows, logs and metrics
@@ -65,9 +66,11 @@ The following Environment Variables are available to configure the Proxy service
 ### Docker Build
 
 ```bash
+#Build local docker image
+docker build -t prefect-auth-proxy .
 # Run docker image
 # Prepare environment variables in .env file
-docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy softrams/prefect-auth-proxy:latest
+docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy prefect-auth-proxy
 ```
 
 ### Running the service
