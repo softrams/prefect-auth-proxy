@@ -25,7 +25,7 @@ const config = {
   TENANT_SLUG: process.env.TENANT_SLUG || "default",
   LOG_LEVEL: process.env.LOG_LEVEL || "warn",
   API_SERVICE_URL:
-    process.env.API_SERVICE_URL || "https://prefectapollo.dev.4innovation.io",
+    process.env.API_SERVICE_URL || "http://localhost:8080/graphql",
   HOST: process.env.HOST || "0.0.0.0",
   PORT: process.env.PORT || 3000,
   LOG_LEVEL_OVERRIDE_DURATION: process.env.LOG_LEVEL_OVERRIDE_DURATION || 300,
