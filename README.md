@@ -1,4 +1,5 @@
-# Proxy Authorization Service for Prefect UI and Prefect CLI
+# Proxy Authorization Service for Prefect UI and Prefect CLI 
+![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/softrams/prefect-auth-proxy)
 
 [Prefect](https://prefect.io) is a great platform for building data flows/pipelines. It supports hybrid execution with execution engines running on-premises with
 all command control and monitoring capabilities via the Prefect UI hosted on the cloud. This means metadata about flows, logs and metrics
@@ -62,12 +63,27 @@ The following Environment Variables are available to configure the Proxy service
 | `DB_PASSWORD`                 | `NULL`              | MySQL Database Server Password            |
 | `DB_DATABASE`                 | `NULL`              | MySQL Database Name                       |
 
-### Docker Build
+### Docker Image
 
+#### Use pre-built docker image
+
+Use docker image from Docker hub
 ```bash
-# Run docker image
+# Run using pre-built docker image from docker hub
 # Prepare environment variables in .env file
 docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy softrams/prefect-auth-proxy:latest
+```
+
+#### Build a local docker image
+
+Build a local docker image (with any changes as needed) and publish to your own repository.
+
+```bash
+# Build local docker image
+docker build -t prefect-auth-proxy .
+# Run local docker image
+# Prepare environment variables in .env file
+docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy prefect-auth-proxy
 ```
 
 ### Running the service
