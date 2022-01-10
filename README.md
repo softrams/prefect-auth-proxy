@@ -66,20 +66,22 @@ The following Environment Variables are available to configure the Proxy service
 ### Docker Image
 
 #### Use pre-built docker image
+
 Use docker image from Docker hub
 ```bash
-# Run using pre-build docker image
+# Run using pre-built docker image from docker hub
 # Prepare environment variables in .env file
 docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy softrams/prefect-auth-proxy:latest
 ```
 
 #### Build a local docker image
+
 Build a local docker image (with any changes as needed) and publish to your own repository.
 
 ```bash
 # Build local docker image
 docker build -t prefect-auth-proxy .
-# Run docker image
+# Run local docker image
 # Prepare environment variables in .env file
 docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy prefect-auth-proxy
 ```
