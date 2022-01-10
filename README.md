@@ -65,12 +65,9 @@ The following Environment Variables are available to configure the Proxy service
 ### Docker Build
 
 ```bash
-# Build docker image
-docker build . -t iddoc/prefect-auth-proxy
-
 # Run docker image
 # Prepare environment variables in .env file
-docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy iddoc/prefect-auth-proxy
+docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy softrams/prefect-auth-proxy:latest
 ```
 
 ### Running the service
