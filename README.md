@@ -1,4 +1,5 @@
-# Proxy Authorization Service for Prefect UI and Prefect CLI 
+# Proxy Authorization Service for Prefect UI and Prefect CLI
+
 ![Docker Cloud Automated build](https://img.shields.io/docker/cloud/automated/softrams/prefect-auth-proxy)
 
 [Prefect](https://prefect.io) is a great platform for building data flows/pipelines. It supports hybrid execution with execution engines running on-premises with
@@ -14,11 +15,11 @@ Prefect UI and CLI to enable authentication/authorization for API. All the reque
 
 ## Setup
 
-This initial implementation uses API Key and MySQL database backend to authenticate and authorize requests.
+This initial implementation uses API Key and MySQL/Postgres database backend to authenticate and authorize requests.
 
 ### Setup Database
 
-This service looks for prefect_api_keys table in MYSQL Database. Please refer to data/db_init.sql for the initial schema and sample data.
+This service looks for prefect_api_keys table in MYSQL/Postgres Database. Please refer to data/`<database>`/db_init.sql for the initial schema and sample data.
 
 ```sql
 -- create table prefect_api_keys
@@ -58,16 +59,18 @@ The following Environment Variables are available to configure the Proxy service
 | `PORT`                        | `3000`              | Port                                      |
 | `LOG_LEVEL_OVERRIDE_DURATION` | `300`               | Log level override duration (seconds)     |
 | `ENV`                         | `NA`                | Environment Name                          |
-| `DB_HOST`                     | `NULL`              | MySQL Database Server Host                |
-| `DB_USER`                     | `NULL`              | MySQL Database Server User                |
-| `DB_PASSWORD`                 | `NULL`              | MySQL Database Server Password            |
-| `DB_DATABASE`                 | `NULL`              | MySQL Database Name                       |
+| `DB_TYPE`                     | `postgres`          | Database Type [postgres/mysql]            |
+| `DB_HOST`                     | `NULL`              | Database Server Host                      |
+| `DB_USER`                     | `NULL`              | Database Server User                      |
+| `DB_PASSWORD`                 | `NULL`              | Database Server Password                  |
+| `DB_DATABASE`                 | `NULL`              | Database Name                             |
 
 ### Docker Image
 
 #### Use pre-built docker image
 
 Use docker image from Docker hub
+
 ```bash
 # Run using pre-built docker image from docker hub
 # Prepare environment variables in .env file

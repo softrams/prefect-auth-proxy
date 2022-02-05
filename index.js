@@ -1,7 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { createProxyMiddleware } = require("http-proxy-middleware");
+
 const mysql = require("mysql");
+const { Pool, Client } = require("pg");
+
 const { parse } = require("graphql");
 
 // Create Express Server
@@ -101,13 +104,23 @@ let dbConn;
 async function initDBConnection() {
   return new Promise(async (resolve, reject) => {
     try {
-      dbConn = mysql.createPool({
-        connectionLimit: 5,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-      });
+      if (process.env.DB_TYPE === "mysql") {
+        dbConn = mysql.createPool({
+          connectionLimit: 5,
+          host: process.env.DB_HOST,
+          user: process.env.DB_USER,
+          password: process.env.DB_PASSWORD,
+          database: process.env.DB_DATABASE,
+        });
+      } else {
+        dbConn = new Pool({
+          user: process.env.DB_USER,
+          host: process.env.DB_HOST,
+          database: process.env.DB_DATABASE,
+          password: process.env.DB_PASSWORD,
+          port: 5432,
+        });
+      }
       resolve(true);
     } catch (err) {
       console.log("Failure in creating DB connection pool:", err);
@@ -124,7 +137,37 @@ async function dbQuery(query, params) {
           reject(error);
         } else {
           // console.log('dbQuery Results:', results);
-          resolve(results);
+          resolve(results.rows ? results.rows : results);
+        }
+      });
+    } catch (err) {
+      console.log("Failure in query: ", err);
+      reject(err);
+    }
+  });
+}
+
+async function fetchAPIKeysInfo(key) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let query = "";
+      let params;
+      if (process.env.DB_TYPE === "mysql") {
+        params = [key];
+        query =
+          "select * from prefect_api_keys where api_key=? and CURDATE() < key_expr_dt";
+      } else {
+        params = [key];
+        query =
+          "select * from prefect_api_keys where api_key=$1 and CURRENT_TIMESTAMP < key_expr_dt";
+      }
+
+      dbConn.query(query, params, (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          // console.log('dbQuery Results:', results);
+          resolve(results.rows ? results.rows : results);
         }
       });
     } catch (err) {
@@ -201,10 +244,7 @@ app.use(async (req, res, next) => {
     let acl = tokenCache.get(apiKey);
     if (!acl) {
       // Fetch ACL from database and store in cache
-      const aclDB = await dbQuery(
-        "select * from prefect_api_keys where api_key=? and CURDATE() < key_expr_dt",
-        [apiKey]
-      );
+      const aclDB = await fetchAPIKeysInfo(apiKey);
       if (aclDB && aclDB.length > 0) {
         acl = aclDB[0];
         acl.ops = acl.scopes.split(",").map((el) => el.trim());
