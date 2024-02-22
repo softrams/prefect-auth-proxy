@@ -3,9 +3,8 @@ const bodyParser = require("body-parser");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const mysql = require("mysql");
-const { Pool, Client } = require("pg");
-
-const { parse } = require("graphql");
+const Pool = require("pg-pool");
+const fs = require("fs");
 
 // Create Express Server
 const app = express();
@@ -34,6 +33,10 @@ const config = {
   LOG_LEVEL_OVERRIDE_DURATION: process.env.LOG_LEVEL_OVERRIDE_DURATION || 300,
   ENV: process.env.ENV || "NA",
 };
+
+if (fs.existsSync("./config/permitted-routes.json")) {
+  config.PERMITTED_ROUTES = JSON.parse(fs.readFileSync("./config/permitted-routes.json"));
+}
 
 // #endregion
 
@@ -177,49 +180,41 @@ async function fetchAPIKeysInfo(key) {
   });
 }
 
-const isMutationBlocked = (op, acl) => {
-  // If public access is allowed, no need to check ACL
-  if (config.ALLOW_PUBLIC_ACCESS) {
+const checkRoutes = (url, routes) => {
+  if (!routes || !routes.length) {
     return false;
   }
 
-  if (op && op.query) {
-    const parsedQuery = parse(op.query);
-    const operationType = parsedQuery.definitions[0].operation;
-    // Operation Names are symbolic and currently Prefect CLI does not
-    // use them. So use the Selection Fields to determine the operation type
-    // const operationName = parsedQuery.definitions[0].name
-    //   ? parsedQuery.definitions[0].name.value
-    //   : parsedQuery.definitions[0].selectionSet.selections[0].name.value;
-    const operationName =
-      parsedQuery.definitions[0].selectionSet.selections[0].name.value;
+  regexRoutes = routes.map(route => route.replace(/\*/g, "[^ ]*"));
 
-    if (
-      acl.ops &&
-      (acl.ops.includes(`${operationType}/*`) ||
-        acl.ops.includes(`${operationType}/${operationName}`))
-    ) {
-      // Do not block
-      console.log(`ALLOWED ${operationType} Op Name: `, operationName);
-      if (operationType === "mutation") {
-        console.warn(
-          `PREFECT_AUDIT_TRAIL: ${operationType} ${operationName} allowed for ${acl.user_id}`,
-          op
-        );
-      }
-      return false;
-    } else {
-      // Block
-      console.warn(
-        `PREFECT_AUDIT_TRAIL: BLOCKED ${operationType} ${operationName} for ${acl.user_id}`,
-        op
-      );
+  for (let i = 0; i < regexRoutes.length; i++) {
+    const match = url.match(regexRoutes[i]);
+
+    if (match) {
       return true;
     }
-  } else {
+  }
+
+  return false;
+};
+
+const allowPassthrough = (url, method, acl) => {
+  // check config for public access
+  if (config.ALLOW_PUBLIC_ACCESS) {
     return true;
   }
-  return true;
+
+  // check permitted routes
+  if (config.PERMITTED_ROUTES && config.PERMITTED_ROUTES[method]?.length && checkRoutes(url, config.PERMITTED_ROUTES[method])) {
+    return true;
+  }
+
+  // check acl
+  if (checkRoutes(url, acl?.ops)) {
+    return true;
+  }
+
+  return false;
 };
 // #endregion
 
@@ -261,8 +256,8 @@ app.use(async (req, res, next) => {
     req.acl = acl;
   }
 
-  if (!req.acl && !config.ALLOW_PUBLIC_ACCESS) {
-    res.status(401).send("Unauthorized");
+  if (!allowPassthrough(req.url, req.method, req.acl)) {
+    return res.status(401).send("Unauthorized");
   } else {
     next();
   }
@@ -331,43 +326,13 @@ app.use(
         });
       } else {
         // Proxy request to end point
-        const contentType = proxyReq.getHeader("Content-Type");
         const writeBody = (bodyData) => {
           proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData));
           proxyReq.write(bodyData);
         };
 
-        if (contentType.includes("application/json")) {
-          let ops = req.body;
-          let filteredOps = [];
-
-          if (Array.isArray(ops)) {
-            for (let op of ops) {
-              if (isMutationBlocked(op, req.acl)) {
-                // console.log("Mutation filtered");
-              } else {
-                filteredOps.push(op);
-              }
-            }
-            if (filteredOps.length > 0) {
-              writeBody(JSON.stringify(filteredOps));
-            } else if (filteredOps.length === 1) {
-              writeBody(JSON.stringify(filteredOps[0]));
-            } else {
-              return res.status(401).send("Unauthorized");
-            }
-          } else {
-            let op = ops;
-            if (isMutationBlocked(op, req.acl)) {
-              // console.log("Mutation filtered");
-              return res.status(401).send("Unauthorized");
-            }
-            writeBody(JSON.stringify(ops));
-          }
-        }
-
-        if (contentType === "application/x-www-form-urlencoded") {
-          writeBody(querystring.stringify(req.body));
+        if (req.body) {
+          writeBody(JSON.stringify(req.body));
         }
       }
     },
