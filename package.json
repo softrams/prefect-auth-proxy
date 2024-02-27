@@ -1,14 +1,20 @@
 {
   "name": "prefect-auth-proxy",
-  "version": "2.0.0",
-  "description": "",
+  "version": "0.0.3",
+  "description": "Prefect UI and CLI Authentication/Authorization Proxy for on-premises deployments",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "prefect",
+    "auth",
+    "proxy",
+    "nodejs"
+  ],
+  "author": "Murali@softrams.com",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.19.1",
     "express": "^4.17.2",
@@ -17,5 +23,12 @@
     "node-cache": "^5.1.2",
     "pg": "^8.11.3",
     "pg-pool": "^3.6.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/softrams/prefect-auth-proxy"
+  },
+  "bugs": {
+    "url": "https://github.com/softrams/prefect-auth-proxy/issues"
   }
 }
