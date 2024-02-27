@@ -158,11 +158,11 @@ async function fetchAPIKeysInfo(key) {
       if (process.env.DB_TYPE === "mysql") {
         params = [key];
         query =
-          "select * from prefect_api_keys where api_key=? and CURDATE() < key_expr_dt";
+          "SELECT * FROM prefect_api_keys WHERE api_key=? AND CURDATE() < key_expr_dt";
       } else {
         params = [key];
         query =
-          "select * from prefect_api_keys where api_key=$1 and CURRENT_TIMESTAMP < key_expr_dt";
+          "SELECT * FROM prefect_api_keys WHERE api_key=$1 AND CURRENT_TIMESTAMP < key_expr_dt";
       }
 
       dbConn.query(query, params, (error, results) => {
