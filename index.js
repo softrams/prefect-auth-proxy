@@ -248,7 +248,7 @@ app.use(async (req, res, next) => {
       } else {
         acl = {
           user_id: "Anonymous",
-          ops: ["mutation/none", "query/*"],
+          ops: [],
         };
       }
     }
