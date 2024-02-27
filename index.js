@@ -292,9 +292,6 @@ app.use(
       console.log("URL", req.url);
       console.log("Headers:", req.headers);
       console.log("Body:", req.body);
-      if (!req.body || !Object.keys(req.body).length) {
-        return res.status(400).send("Invalid Request");
-      }
 
       if (
         req.url === "/" &&
