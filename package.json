@@ -16,9 +16,9 @@
   "author": "Murali@softrams.com",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.19.1",
-    "express": "^4.17.2",
-    "http-proxy-middleware": "^2.0.1",
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6",
     "mysql": "^2.18.1",
     "node-cache": "^5.1.2",
     "pg": "^8.11.3",
