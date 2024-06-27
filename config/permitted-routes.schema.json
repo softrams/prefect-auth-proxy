@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://softrams.io/schemas/prefect-auth-proxy-permitted-routes.json",
+  "type": "object",
+  "properties": {"$schema":true},
+  "patternProperties": {
+    "(GET|POST|PUT|DELETE)": {
+      "type": "array",
+      "description": "HTTP METHOD with array of filter strings for permitted routes for the METHOD",
+      "items": {
+        "type": "string",
+        "description": "Pattern to match against for the URL"
+      },
+      "examples": [["*","*/filters"],["*/filters","*/count"]]
+    }
+    
+  },
+  "additionalProperties": false
+}

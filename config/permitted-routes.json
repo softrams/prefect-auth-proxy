@@ -1,4 +1,4 @@
 {
-  "GET" : ["*"],
+  "GET" : ["/health","/ready"],
   "POST": ["*/filter", "*/count"]
 }

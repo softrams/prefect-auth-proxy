@@ -32,10 +32,17 @@ const config = {
   PORT: process.env.PORT || 3000,
   LOG_LEVEL_OVERRIDE_DURATION: process.env.LOG_LEVEL_OVERRIDE_DURATION || 300,
   ENV: process.env.ENV || "NA",
+  PERMITTED_ROUTES_FILE: process.env.PERMITTED_ROUTES_FILE || "./config/permitted-routes.json",
+  PERMITTED_ROUTES_JSON: process.env.PERMITTED_ROUTES_JSON || ""
 };
 
-if (fs.existsSync("./config/permitted-routes.json")) {
-  config.PERMITTED_ROUTES = JSON.parse(fs.readFileSync("./config/permitted-routes.json"));
+if (fs.existsSync(config.PERMITTED_ROUTES_FILE)) {
+  if (config.PERMITTED_ROUTES_JSON) {
+    config.PERMITTED_ROUTES = JSON.parse(config.PERMITTED_ROUTES_JSON)
+  }
+  else {
+    config.PERMITTED_ROUTES = JSON.parse(fs.readFileSync(config.PERMITTED_ROUTES_FILE));
+  }
 }
 
 // #endregion
@@ -46,19 +53,19 @@ const gLogFunc = console.log;
 const gWarnFunc = console.warn;
 
 function initLogLevels(level) {
-  console.debug = () => {};
-  console.trace = () => {};
-  console.info = () => {};
-  console.warn = () => {};
-  console.log = () => {};
+  console.debug = () => { };
+  console.trace = () => { };
+  console.info = () => { };
+  console.warn = () => { };
+  console.log = () => { };
 
   if (level === "warn") {
-    console.log = () => {};
+    console.log = () => { };
     console.warn = gWarnFunc;
   }
   if (level === "error") {
-    console.log = () => {};
-    console.warn = () => {};
+    console.log = () => { };
+    console.warn = () => { };
   }
   if (level === "info") {
     console.log = gLogFunc;
@@ -179,7 +186,12 @@ async function fetchAPIKeysInfo(key) {
     }
   });
 }
-
+/**
+ * 
+ * @param {String} url "Url to validate against route rules"
+ * @param {Array} routes "Allowed or Permitted routes to match against"
+ * @returns 
+ */
 const checkRoutes = (url, routes) => {
   if (!routes || !routes.length) {
     return false;
@@ -203,7 +215,6 @@ const allowPassthrough = (url, method, acl) => {
   if (config.ALLOW_PUBLIC_ACCESS) {
     return true;
   }
-
   // check permitted routes
   if (config.PERMITTED_ROUTES && config.PERMITTED_ROUTES[method]?.length && checkRoutes(url, config.PERMITTED_ROUTES[method])) {
     return true;
@@ -213,7 +224,6 @@ const allowPassthrough = (url, method, acl) => {
   if (checkRoutes(url, acl?.ops)) {
     return true;
   }
-
   return false;
 };
 // #endregion
@@ -257,6 +267,7 @@ app.use(async (req, res, next) => {
   }
 
   if (!allowPassthrough(req.url, req.method, req.acl)) {
+    console.warn(`AUTH-PROXY-AUDIT: ${req.url}`)
     return res.status(401).send("Unauthorized");
   } else {
     next();
@@ -325,6 +336,9 @@ app.use(
         // Proxy request to end point
         const writeBody = (bodyData) => {
           proxyReq.setHeader("Content-Length", Buffer.byteLength(bodyData));
+          if (config.LOG_LEVEL === "debug") {
+            proxyReq.removeHeader('Accept-Encoding')
+          }
           proxyReq.write(bodyData);
         };
 
