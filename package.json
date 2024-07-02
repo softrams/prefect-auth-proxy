@@ -1,6 +1,9 @@
 {
   "name": "prefect-auth-proxy",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=16"
+  },
   "description": "Prefect UI and CLI Authentication/Authorization Proxy for on-premises deployments",
   "main": "index.js",
   "scripts": {

@@ -106,3 +106,4 @@ dist
 # Local Development
 localDevelopment
 docker-compose.yaml
+.DS_Store
