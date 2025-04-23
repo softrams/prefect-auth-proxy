@@ -25,7 +25,7 @@
     "mysql": "^2.18.1",
     "node-cache": "^5.1.2",
     "pg": "^8.11.3",
-    "pg-pool": "^3.6.1"
+    "pg-pool": "^3.8.0"
   },
   "repository": {
     "type": "git",
