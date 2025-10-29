@@ -104,6 +104,4 @@ dist
 .tern-port
 
 # Local Development
-localDevelopment
-docker-compose.yaml
 .DS_Store

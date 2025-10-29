@@ -211,9 +211,19 @@ const checkRoutes = (url, routes) => {
 };
 
 const allowPassthrough = (url, method, acl) => {
-  if (config.ALLOW_PUBLIC_ACCESS) return true;
-  if (config.PERMITTED_ROUTES && config.PERMITTED_ROUTES[method]?.length && checkRoutes(url, config.PERMITTED_ROUTES[method])) return true;
-  if (checkRoutes(url, acl?.ops)) return true;
+  // check config for public access
+  if (config.ALLOW_PUBLIC_ACCESS) {
+    return true;
+  }
+  // check permitted routes
+  if (config.PERMITTED_ROUTES && config.PERMITTED_ROUTES[method]?.length && checkRoutes(url, config.PERMITTED_ROUTES[method])) {
+    return true;
+  }
+
+  // check acl
+  if (checkRoutes(url, acl?.ops)) {
+    return true;
+  }
   return false;
 };
 // #endregion
@@ -242,30 +252,7 @@ app.use(async (req, res, next) => {
       const aclDB = await fetchAPIKeysInfo(apiKey);
       if (aclDB && aclDB.length > 0) {
         acl = aclDB[0];
-        const rawScopes = (acl.scopes || '').trim();
-        if (rawScopes.startsWith('{') && rawScopes.endsWith('}')) {
-          try {
-            const parsed = JSON.parse(rawScopes);
-            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-              const normalized = {};
-              Object.entries(parsed).forEach(([methodKey, patterns]) => {
-                if (Array.isArray(patterns)) {
-                  const expanded = patterns.flatMap(p => p.split(',')).map(p => p.trim()).filter(Boolean);
-                  normalized[methodKey] = expanded;
-                }
-              });
-              // Only keep patterns relevant to this request method (fallback to '*')
-              acl.ops = normalized[req.method] || normalized['*'] || []
-            } else {
-              acl.ops = [];
-            }
-          } catch (e) {
-            console.warn('Invalid JSON scopes, falling back to list parsing');
-            acl.ops = rawScopes ? rawScopes.split(',').map(s => s.trim()).filter(Boolean) : [];
-          }
-        } else {
-          acl.ops = rawScopes ? rawScopes.split(',').map(s => s.trim()).filter(Boolean) : [];
-        }
+        acl.ops = acl.scopes.split(",").map((el) => el.trim());
         console.log("ACL: ", acl);
         tokenCache.set(apiKey, acl);
       } else {
@@ -308,6 +295,7 @@ app.use(
       });
       proxyRes.on("end", function () {
         body = Buffer.concat(body).toString();
+        console.log("res from proxied server:", body);
         // res.end("my response to cli");
       });
     },

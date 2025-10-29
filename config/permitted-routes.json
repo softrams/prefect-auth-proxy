@@ -1,4 +1,5 @@
 {
-  "GET" : ["*"],
+  "GET": ["/flows/*"],
   "POST": ["*/filter", "*/count"]
 }
+
