@@ -1,0 +1,46 @@
+---
+version: "3.4"
+
+services:
+  nginx:
+    image: nginx
+    volumes:
+      - ./localDevelopment/nginx/conf.d/:/etc/nginx/conf.d/
+    ports:
+      - "8080:80"
+    links:
+      - auth-proxy
+    depends_on:
+      - auth-proxy
+
+  auth-proxy:
+    image: localhost/auth-proxy
+    build:
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./index.js:/usr/src/app/index.js
+      - ./node_modules:/usr/src/app/node_modules
+      - ./config/permitted-routes.json:/usr/src/app/config/permitted-routes.json
+    environment:
+      - LOG_LEVEL=info
+      - API_SERVICE_URL=https://prefect2-server.dev.4innovation.internal.cms.gov
+      # - ALLOW_PUBLIC_ACCESS=false
+      - DB_HOST=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=ajf8w9fjafj88anf8
+      - DB_DATABASE=postgres
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: ajf8w9fjafj88anf8
+    volumes:
+      - ./localDevelopment/postgres:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"

@@ -11,5 +11,5 @@ CREATE TABLE prefect_api_keys (
   PRIMARY KEY (user_id)
 );
 
-insert into prefect_api_keys (user_id, scopes, api_key, key_issu_dt, key_expr_dt, creatd_dt, last_updatd_dt, creatd_by, last_updatd_by) 
-values('USERID', 'mutation/*, query/*', 'TestKey001', '2021-12-27 00:00:00', '2022-12-31 00:00:00', '2021-12-30 00:00:00', '2021-12-30 00:00:00', 'ADMINUSERID', 'ADMINUSERID')
+insert into prefect_api_keys (user_id, scopes, api_key, key_issu_dt, key_expr_dt, creatd_dt, last_updatd_dt, creatd_by, last_updatd_by)
+values('USERID', 'mutation/*, query/*, *', 'TestKey001', '2021-12-27 00:00:00', '2022-12-31 00:00:00', '2021-12-30 00:00:00', '2021-12-30 00:00:00', 'ADMINUSERID', 'ADMINUSERID')
