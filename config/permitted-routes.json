@@ -1,5 +1,5 @@
 {
-  "GET": ["/flows/*"],
-  "POST": ["*/filter", "*/count"]
+  "GET": ["/", "/dashboard", "/dashboard/*", "/assets/*", "/docs", "/openapi.json", "/ui-settings", "*.svg", "*.ico", "*.png"],
+  "POST": [],
+  "DELETE": []
 }
-

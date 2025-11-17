@@ -197,12 +197,20 @@ const checkRoutes = (url, routes) => {
     return false;
   }
 
-  regexRoutes = routes.map(route => route.replace(/\*/g, "[^ ]*"));
+  // Normalize URL - remove leading slash for comparison
+  const normalizedUrl = url.startsWith('/') ? url.substring(1) : url;
 
-  for (let i = 0; i < regexRoutes.length; i++) {
-    const match = url.match(regexRoutes[i]);
-
-    if (match) {
+  for (let i = 0; i < routes.length; i++) {
+    let pattern = routes[i];
+    // Normalize pattern - remove leading slash
+    pattern = pattern.startsWith('/') ? pattern.substring(1) : pattern;
+    // Convert * to .* for regex, escape special chars
+    // Handle /* as optional trailing slash + anything
+    pattern = pattern.replace(/\/\*/g, '(/.*)?');
+    pattern = pattern.replace(/\*/g, '.*');
+    const regex = new RegExp('^' + pattern + '$');
+    
+    if (regex.test(normalizedUrl)) {
       return true;
     }
   }
@@ -252,7 +260,33 @@ app.use(async (req, res, next) => {
       const aclDB = await fetchAPIKeysInfo(apiKey);
       if (aclDB && aclDB.length > 0) {
         acl = aclDB[0];
-        acl.ops = acl.scopes.split(",").map((el) => el.trim());
+        const rawScopes = (acl.scopes || '').trim();
+        if (rawScopes.startsWith('{') && rawScopes.endsWith('}')) {
+          try {
+            const parsed = JSON.parse(rawScopes);
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+              acl.scopesByMethod = {};
+              Object.entries(parsed).forEach(([methodKey, patterns]) => {
+                if (Array.isArray(patterns)) {
+                  const expanded = patterns.flatMap(p => p.split(',')).map(p => p.trim()).filter(Boolean);
+                  acl.scopesByMethod[methodKey] = expanded;
+                }
+              });
+            } else {
+              acl.scopesByMethod = null;
+            }
+          } catch (e) {
+            console.warn('Invalid JSON scopes, falling back to list parsing');
+            acl.scopesByMethod = null;
+          }
+        } else {
+          acl.scopesByMethod = null;
+        }
+        
+        if (!acl.scopesByMethod) {
+          acl.ops = rawScopes ? rawScopes.split(',').map(s => s.trim()).filter(Boolean) : [];
+        }
+        
         console.log("ACL: ", acl);
         tokenCache.set(apiKey, acl);
       } else {
@@ -262,6 +296,11 @@ app.use(async (req, res, next) => {
         };
       }
     }
+    
+    if (acl.scopesByMethod) {
+      acl.ops = acl.scopesByMethod[req.method] || acl.scopesByMethod['*'] || [];
+    }
+    
     console.log("ACL: ", acl);
     req.acl = acl;
   }
@@ -295,7 +334,6 @@ app.use(
       });
       proxyRes.on("end", function () {
         body = Buffer.concat(body).toString();
-        console.log("res from proxied server:", body);
         // res.end("my response to cli");
       });
     },
