@@ -1,0 +1,3 @@
+"user_id","scopes","api_key","key_issu_dt","key_expr_dt","creatd_dt","last_updatd_dt","creatd_by","last_updatd_by"
+localDev,"{""GET"":[""api/flows/*"",""api/deployments/*""],""POST"":[""api/*""]}",EXnPWYVr7r6uo642NxVo,2024-01-01 00:00:00.000,2027-01-01 00:00:00.000,2024-01-01 00:00:00.000,2024-01-01 00:00:00.000,localDev,localDev
+localDev2,"{""GET"":[""api/*""],""POST"":[""api/*""],""DELETE"":[""api/*""]}",Kj8dF3nQw9pLm2xTv5Rs,2024-01-01 00:00:00.000,2027-01-01 00:00:00.000,2024-01-01 00:00:00.000,2024-01-01 00:00:00.000,localDev,localDev
