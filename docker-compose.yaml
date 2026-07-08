@@ -25,11 +25,11 @@ services:
       - ./config/permitted-routes.json:/usr/src/app/config/permitted-routes.json
     environment:
       - LOG_LEVEL=info
-      - API_SERVICE_URL=https://prefect2-server.dev.4innovation.internal.cms.gov
+      - API_SERVICE_URL=https://localhost:8080
       # - ALLOW_PUBLIC_ACCESS=false
       - DB_HOST=postgres
       - DB_USER=postgres
-      - DB_PASSWORD=REDACTED_LOCAL_SECRET
+      - DB_PASSWORD=LocalDevelopment
       - DB_DATABASE=postgres
     links:
       - postgres
@@ -39,7 +39,7 @@ services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: REDACTED_LOCAL_SECRET
+      POSTGRES_PASSWORD: LocalDevelopment
     volumes:
       - ./localDevelopment/postgres:/docker-entrypoint-initdb.d
     ports:
