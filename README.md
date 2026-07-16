@@ -89,6 +89,33 @@ docker build -t prefect-auth-proxy .
 docker run -d -p 3000:3000 --env-file ./.env --name auth-proxy prefect-auth-proxy
 ```
 
+#### Local Development with Docker Compose
+
+For local Docker Compose usage, generate the local-only password file and CSV scaffold first:
+
+```bash
+./scripts/start-local.sh --prepare-only
+```
+
+This creates:
+
+- `.env.local.compose` with a generated `LOCAL_POSTGRES_PASSWORD`
+- `localDevelopment/postgres/prefect-api-keys-table.local.csv`
+
+Then add one or more local Prefect API key rows to `localDevelopment/postgres/prefect-api-keys-table.local.csv` and start the stack:
+
+```bash
+./scripts/start-local.sh
+```
+
+If Postgres was already initialized, run `docker compose down -v` before restarting so the CSV seed data is reloaded.
+
+Example CSV row:
+
+```csv
+"localDev","{""GET"": [""api/*""]}","<generated api key>",2026-01-01 00:00:00.000,2027-01-01 00:00:00.000,2026-01-01 00:00:00.000,2026-01-01 00:00:00.000,"localDev","localDev"
+```
+
 ### Running the service
 
 This is a typical node.js application. So you can simply clone this repo and run.

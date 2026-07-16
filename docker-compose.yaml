@@ -29,7 +29,7 @@ services:
       # - ALLOW_PUBLIC_ACCESS=false
       - DB_HOST=postgres
       - DB_USER=postgres
-      - DB_PASSWORD=LocalDevelopment
+      - DB_PASSWORD=${LOCAL_POSTGRES_PASSWORD:?Run scripts/start-local.sh first}
       - DB_DATABASE=postgres
     links:
       - postgres
@@ -39,7 +39,7 @@ services:
   postgres:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: LocalDevelopment
+      POSTGRES_PASSWORD: ${LOCAL_POSTGRES_PASSWORD:?Run scripts/start-local.sh first}
     volumes:
       - ./localDevelopment/postgres:/docker-entrypoint-initdb.d
     ports:
