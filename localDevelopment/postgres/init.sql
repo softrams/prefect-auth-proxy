@@ -11,6 +11,6 @@ CREATE TABLE prefect_api_keys (
 );
 
 COPY prefect_api_keys
-FROM '/docker-entrypoint-initdb.d/prefect-api-keys-table.csv'
+FROM '/docker-entrypoint-initdb.d/prefect-api-keys-table.local.csv'
 DELIMITER ','
 CSV HEADER;
