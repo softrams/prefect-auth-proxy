@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "audit": "npm audit --omit=dev"
   },
   "keywords": [
     "prefect",
@@ -19,8 +20,8 @@
   "author": "Murali@softrams.com",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.20.2",
-    "express": "^4.18.2",
+    "body-parser": "^1.20.6",
+    "express": "^4.22.2",
     "http-proxy-middleware": "^2.0.10",
     "mysql": "^2.18.1",
     "node-cache": "^5.1.2",
